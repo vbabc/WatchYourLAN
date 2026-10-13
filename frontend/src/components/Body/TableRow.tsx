@@ -54,7 +54,12 @@ function TableRow(_props: any) {
       <td>{_props.host.Iface}</td>
       <td><a href={"http://" + _props.host.IP} target="_blank">{_props.host.IP}</a></td>
       <td>{_props.host.Mac}</td>
-      <td title={_props.host.Hw}>{_props.host.Hw.slice(0,12)+".."}</td>
+      <td
+        title={_props.host.Hw}
+        style={{ "max-width": "24rem", "white-space": "normal", "overflow-wrap": "anywhere" }}
+      >
+        {_props.host.Hw}
+      </td>
       <td>{_props.host.Date}</td>
       <td>
         <div class="form-check form-switch">
