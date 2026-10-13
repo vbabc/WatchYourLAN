@@ -10,6 +10,8 @@ unchanged upstream application code.
 The Docker build compiles the frontend before embedding its assets in the Go
 binary. The runtime is based on the pinned upstream 2.1.4 image to retain its
 existing ARP scanner and runtime dependencies.
+The build applies upstream's production URL rewrite so the browser uses the
+current server for API requests and the embedded path for lazy-loaded assets.
 
 GitHub Actions publishes the `linux/amd64` image to
 `ghcr.io/vbabc/watchyourlan` with a `2.1.4-hardware-full` tag, a full commit-SHA

@@ -6,7 +6,10 @@ WORKDIR /frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 COPY frontend/ ./
-RUN npm run build
+# Match frontend/Makefile's production rewrite for API and lazy asset URLs.
+RUN npm run build \
+    && sed -i 's/assets/fs\/public\/assets/g;s/http:\/\/0.0.0.0:8840//g' dist/assets/index.js \
+    && ! grep -q 'http://0.0.0.0:8840' dist/assets/index.js
 
 FROM --platform=$BUILDPLATFORM golang:1.25.1-alpine AS builder
 
@@ -18,7 +21,7 @@ COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
 COPY backend/ .
-COPY --from=frontend /frontend/dist/ ./internal/web/public/
+COPY --from=frontend /frontend/dist/assets/ ./internal/web/public/assets/
 
 ARG TARGETPLATFORM
 RUN CGO_ENABLED=0 xx-go build -ldflags='-w -s' -o /WatchYourLAN ./cmd/WatchYourLAN
